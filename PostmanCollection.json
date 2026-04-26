@@ -1,0 +1,252 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-5e6f-7g8h-9i0j-k1l2m3n4o5p6",
+    "name": "WebDev: Light Product & Order Microservices",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Коллекция для тестирования микросервисов интернет-магазина лампочек"
+  },
+  "variable": [
+    {
+      "key": "product_base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "order_base_url",
+      "value": "http://localhost:8001",
+      "type": "string"
+    },
+    {
+      "key": "product_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "order_id",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Product Service",
+      "item": [
+        {
+          "name": "GET /api/products (List)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{product_base_url}}/api/products?page=1&limit=20",
+              "host": ["{{product_base_url}}"],
+              "path": ["api", "products"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "20"}
+              ]
+            },
+            "description": "Получить список товаров с пагинацией"
+          }
+        },
+        {
+          "name": "GET /api/products?category=LED",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{product_base_url}}/api/products?category=LED",
+              "host": ["{{product_base_url}}"],
+              "path": ["api", "products"],
+              "query": [{"key": "category", "value": "LED"}]
+            },
+            "description": "Фильтрация товаров по категории"
+          }
+        },
+        {
+          "name": "GET /api/products/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{product_base_url}}/api/products/{{product_id}}",
+              "host": ["{{product_base_url}}"],
+              "path": ["api", "products", "{{product_id}}"],
+              "variable": [{"key": "product_id", "value": "{{product_id}}"}]
+            },
+            "description": "Получить товар по ID"
+          }
+        },
+        {
+          "name": "POST /api/products (Create)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sku\": \"TEST-001\",\n  \"name\": \"Тестовая лампа\",\n  \"description\": \"Описание для теста\",\n  \"price\": 99.99,\n  \"stock\": 100,\n  \"category\": \"LED\"\n}"
+            },
+            "url": {
+              "raw": "{{product_base_url}}/api/products",
+              "host": ["{{product_base_url}}"],
+              "path": ["api", "products"]
+            },
+            "description": "Создать новый товар"
+          }
+        },
+        {
+          "name": "PUT /api/products/:id (Update)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 199.99,\n  \"stock\": 50\n}"
+            },
+            "url": {
+              "raw": "{{product_base_url}}/api/products/{{product_id}}",
+              "host": ["{{product_base_url}}"],
+              "path": ["api", "products", "{{product_id}}"]
+            },
+            "description": "Обновить товар (цена/остаток)"
+          }
+        },
+        {
+          "name": "DELETE /api/products/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{product_base_url}}/api/products/{{product_id}}",
+              "host": ["{{product_base_url}}"],
+              "path": ["api", "products", "{{product_id}}"]
+            },
+            "description": "Удалить товар (мягкое удаление)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Order Service",
+      "item": [
+        {
+          "name": "POST /api/orders (Create)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer_name\": \"Иванов Иван\",\n  \"email\": \"ivan@example.com\",\n  \"phone\": \"+79991234567\",\n  \"delivery_address\": \"г. Москва, ул. Тверская, 1\",\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 2,\n      \"product_name\": \"LED лампа E27 10W\",\n      \"price_at_purchase\": 250.00\n    },\n    {\n      \"product_id\": 3,\n      \"quantity\": 1,\n      \"product_name\": \"LED лампа E14 5W\",\n      \"price_at_purchase\": 180.00\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{order_base_url}}/api/orders",
+              "host": ["{{order_base_url}}"],
+              "path": ["api", "orders"]
+            },
+            "description": "Создать новый заказ"
+          }
+        },
+        {
+          "name": "GET /api/orders/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{order_base_url}}/api/orders/{{order_id}}",
+              "host": ["{{order_base_url}}"],
+              "path": ["api", "orders", "{{order_id}}"],
+              "variable": [{"key": "order_id", "value": "{{order_id}}"}]
+            },
+            "description": "Получить заказ по ID"
+          }
+        },
+        {
+          "name": "GET /api/orders (List)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{order_base_url}}/api/orders?page=1&limit=20",
+              "host": ["{{order_base_url}}"],
+              "path": ["api", "orders"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "20"}
+              ]
+            },
+            "description": "Список всех заказов"
+          }
+        },
+        {
+          "name": "GET /api/orders?status=PAID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{order_base_url}}/api/orders?status=PAID",
+              "host": ["{{order_base_url}}"],
+              "path": ["api", "orders"],
+              "query": [{"key": "status", "value": "PAID"}]
+            },
+            "description": "Фильтрация заказов по статусу"
+          }
+        },
+        {
+          "name": "PATCH /api/orders/:id/status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"SHIPPED\"\n}"
+            },
+            "url": {
+              "raw": "{{order_base_url}}/api/orders/{{order_id}}/status",
+              "host": ["{{order_base_url}}"],
+              "path": ["api", "orders", "{{order_id}}", "status"]
+            },
+            "description": "Сменить статус заказа: NEW → PAID → SHIPPED → CANCELLED"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Utilities",
+      "item": [
+        {
+          "name": "Health Check: Product Service",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{product_base_url}}/docs",
+              "host": ["{{product_base_url}}"],
+              "path": ["docs"]
+            },
+            "description": "Swagger UI Product Service"
+          }
+        },
+        {
+          "name": "Health Check: Order Service",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{order_base_url}}/docs",
+              "host": ["{{order_base_url}}"],
+              "path": ["docs"]
+            },
+            "description": "Swagger UI Order Service"
+          }
+        }
+      ]
+    }
+  ]
+}
