@@ -53,6 +53,35 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  db-admins:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: admins
+    ports:
+      - "5434:5432"
+    volumes:
+      - admins_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  admin-service:
+    build: ./admin-service
+    ports:
+      - "8002:8002"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db-admins:5432/admins
+      SECRET_KEY: "super-secret-jwt-key-for-homework"
+    depends_on:
+      db-admins:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   products_data:
   orders_data:
+  admins_data:
